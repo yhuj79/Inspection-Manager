@@ -1,25 +1,13 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {Alert, Dimensions, StyleSheet, Vibration, View} from 'react-native';
+import React, {useRef} from 'react';
+// import {Alert, Vibration} from 'react-native';
+import {Dimensions, StyleSheet, View} from 'react-native';
 import {Camera, CameraType} from 'react-native-camera-kit';
 
-function Scanner() {
-  const [scaned, setScaned] = useState(true);
+function Scanner({navigation}) {
   const ref = useRef(null);
 
-  useEffect(() => {
-    // 종료후 재시작을 했을때 초기화
-    setScaned(true);
-  }, []);
-
   const onBarCodeRead = (event: any) => {
-    if (!scaned) {
-      return;
-    }
-    setScaned(false);
-    Vibration.vibrate();
-    Alert.alert('Code', event.nativeEvent.codeStringValue, [
-      {text: 'OK', onPress: () => setScaned(true)},
-    ]);
+    navigation.jumpTo('List', {productId: event.nativeEvent.codeStringValue});
   };
 
   return (

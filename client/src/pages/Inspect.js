@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import {SafeAreaView, View, Button} from 'react-native';
 import Scanner from '../components/Scanner';
 
-function Inspect() {
+function Inspect({navigation}) {
   const [enabled, setEnabled] = useState(false);
 
   return (
@@ -18,7 +18,7 @@ function Inspect() {
       ) : (
         <View style={{flex: 1}}>
           <Button title="Back" onPress={() => setEnabled(false)} />
-          <Scanner />
+          <Scanner navigation={navigation} />
         </View>
       )}
     </View>
