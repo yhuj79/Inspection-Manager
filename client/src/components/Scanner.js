@@ -28,13 +28,9 @@ function Scanner() {
         style={styles.scanner}
         ref={ref}
         cameraType={CameraType.Back} // Front/Back(default)
-        zoomMode
-        focusMode
-        // Barcode Scanner Props
         scanBarcode
         showFrame={true}
         laserColor="rgba(0, 0, 0, 0)"
-        frameColor="rgba(0, 0, 0, 0)"
         surfaceColor="rgba(0, 0, 0, 0)"
         onReadCode={onBarCodeRead}
       />

@@ -2,25 +2,15 @@
 import React from 'react';
 import {StyleSheet, View, Text, Image} from 'react-native';
 
-function Logo(props) {
-  let img =
-    props.native === 'no'
-      ? require('../assets/react.png')
-      : require('../assets/reactnative.png');
-  return (
-    <View>
-      <Image source={img} style={{width: 330, height: 200}} />
-    </View>
-  );
-}
-
 function Home() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Inspection Manager</Text>
-      <Text style={{marginBottom: 30, fontSize: 20}}>1.0.0</Text>
-      <Logo native="no" />
-      <Logo native="yes" />
+      <Text style={{fontSize: 20, margin: 5}}>1.0.0</Text>
+      <Image
+        source={require('../assets/reactnative.png')}
+        style={{width: 350, height: 200, margin: 30}}
+      />
     </View>
   );
 }
@@ -32,7 +22,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    padding: 20,
     fontSize: 30,
     fontWeight: 'bold',
   },
