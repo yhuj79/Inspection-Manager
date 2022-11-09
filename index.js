@@ -30,3 +30,28 @@ app.get("/api/product", (req, res) => {
     }
   });
 });
+
+app.get("/api/product/list", (req, res) => {
+  const sql = "SELECT * FROM InspectionManagerSystem.product WHERE date = ?";
+  const params = req.query.date;
+  db.query(sql, params, (err, result) => {
+    if (!err) {
+      res.send(result);
+    } else {
+      res.send(err);
+    }
+  });
+});
+
+app.get("/api/product/scan", (req, res) => {
+  const sql =
+    "SELECT * FROM InspectionManagerSystem.product WHERE date = ? AND id= ?";
+  const params = [req.query.date, req.query.id];
+  db.query(sql, params, (err, result) => {
+    if (!err) {
+      res.send(result);
+    } else {
+      res.send(err);
+    }
+  });
+});

@@ -1,25 +1,38 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, View, Text, ScrollView} from 'react-native';
 import Axios from 'axios';
 
 function List({navigation, route}) {
   const [data, setData] = useState([]);
-  const {productId} = route.params || {};
+  const {date} = route.params || {};
+
+  // TEST
+  //   useEffect(() => {
+  //     Axios.get('http://192.168.45.224:3000/api/product')
+  //       .then(res => {
+  //         console.log(res.data);
+  //       })
+  //       .catch(error => console.log(error));
+  //   }, []);
 
   useEffect(() => {
-    Axios.get('http://192.168.45.224:3000/api/product')
+    Axios.get('http://192.168.45.224:3000/api/product/list', {
+      params: {date: date},
+    })
       .then(res => {
         setData(res.data);
-        console.log(res.data); // Test
+        console.log(res.data); // TEST
       })
       .catch(error => console.log(error));
-  }, []);
+  }, [date]);
 
   return (
-    <View style={styles.container}>
-      <Text>{JSON.stringify(data, null, 3)}</Text>
-      <Text style={styles.productId}>{productId}</Text>
-    </View>
+    <ScrollView>
+      <View style={styles.container}>
+        <Text>{JSON.stringify(data, null, 3)}</Text>
+        <Text>{date}</Text>
+      </View>
+    </ScrollView>
   );
 }
 
