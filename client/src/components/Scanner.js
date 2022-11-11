@@ -4,6 +4,7 @@ import {Backdrop} from 'react-native-backdrop';
 import {Dimensions, StyleSheet, View, Text, Button, Image} from 'react-native';
 import {Camera, CameraType} from 'react-native-camera-kit';
 import Axios from 'axios';
+import {IP_KEY} from '@env';
 
 function Scanner({navigation, date}) {
   const ref = useRef(null);
@@ -12,7 +13,7 @@ function Scanner({navigation, date}) {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    Axios.get('http://192.168.45.224:3000/api/product/scan', {
+    Axios.get(`http://${IP_KEY}:3000/api/product/scan`, {
       params: {date: date, id: code},
     })
       .then(res => {
@@ -69,7 +70,7 @@ function Scanner({navigation, date}) {
           backgroundColor: '#fff',
         }}>
         <View style={styles.backdrop}>
-          {data ? (
+          {data[0] ? (
             <>
               <Image
                 source={require('../assets/reactnative.png')}
