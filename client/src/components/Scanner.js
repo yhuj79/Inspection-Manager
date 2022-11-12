@@ -1,13 +1,24 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState, useRef, useEffect} from 'react';
 import {Backdrop} from 'react-native-backdrop';
-import {Dimensions, StyleSheet, View, Text, Button, Image} from 'react-native';
+import {
+  Dimensions,
+  StyleSheet,
+  View,
+  Text,
+  TextInput,
+  Button,
+  Image,
+} from 'react-native';
 import {Camera, CameraType} from 'react-native-camera-kit';
+import Product from '../components/Product';
+import {ImagePath} from '../assets/ImagePath';
 import Axios from 'axios';
 import {IP_KEY} from '@env';
 
 function Scanner({navigation, date}) {
   const ref = useRef(null);
+  const [scaned, setScaned] = useState(true);
   const [visible, setVisible] = useState(false);
   const [code, setCode] = useState(0);
   const [data, setData] = useState([]);
@@ -24,6 +35,8 @@ function Scanner({navigation, date}) {
   }, [date, code]);
 
   const onBarCodeRead = (event: any) => {
+    if (!scaned) return;
+    setScaned(false);
     setCode(event.nativeEvent.codeStringValue);
     // navigation.jumpTo('List', {
     //   productId: event.nativeEvent.codeStringValue,
@@ -38,6 +51,7 @@ function Scanner({navigation, date}) {
 
   const handleClose = () => {
     setVisible(false);
+    setScaned(true);
   };
 
   return (
@@ -71,27 +85,31 @@ function Scanner({navigation, date}) {
         }}>
         <View style={styles.backdrop}>
           {data[0] ? (
-            <>
-              <Image
-                source={require('../assets/reactnative.png')}
-                style={{width: 250, height: 250, margin: 10}}
-              />
-              <Text>{data[0].name}</Text>
-              <Text>출고 : {data[0].export}</Text>
-              <Text>입고 : {data[0].import}</Text>
-            </>
+            data.map((m, index) => {
+              return (
+                <Product
+                  list={false}
+                  key={index}
+                  id={m.id}
+                  name={m.name}
+                  exports={m.export}
+                  imports={m.import}
+                />
+              );
+            })
           ) : (
             <Text>등록된 상품이 없습니다.</Text>
           )}
-          <Button
-            title="등록"
-            onPress={() =>
-              navigation.jumpTo('List', {
-                date: date,
-              })
-            }
+          <TextInput
+            style={styles.input}
+            // onChangeText={onChangeText}
+            // value={value}
+            placeholder={data[0] ? ` ${String(data[0].import)}` : null}
+            placeholderTextColor="#000"
+            keyboardType="number-pad"
           />
-          <Button title="취소" onPress={() => setVisible(false)} />
+          <Button title="등록" onPress={() => handleClose()} />
+          <Button title="취소" onPress={() => handleClose()} />
         </View>
       </Backdrop>
     </View>
@@ -109,7 +127,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
+    height: Dimensions.get('window').height - 144,
+  },
+  input: {
+    width: 100,
+    height: 30,
+    borderColor: '#000',
+    borderRadius: 10,
+    borderWidth: 1,
   },
 });
 

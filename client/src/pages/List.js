@@ -1,11 +1,18 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, Text, ScrollView} from 'react-native';
+import {StyleSheet, View, Text, ScrollView, Button} from 'react-native';
+import DatePicker from 'react-native-date-picker';
+import Product from '../components/Product';
 import Axios from 'axios';
 import {IP_KEY} from '@env';
 
-function List({navigation, route}) {
+function List({navigation}) {
+  const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
-  const {date} = route.params || {};
+
+  const [date, setDate] = useState(new Date('2022-05-22T09:00:00'));
+  const strDate = `${date.getFullYear()}-${
+    date.getMonth() + 1
+  }-${date.getDate()}`;
 
   // TEST
   // useEffect(() => {
@@ -19,7 +26,11 @@ function List({navigation, route}) {
 
   useEffect(() => {
     Axios.get(`http://${IP_KEY}:3000/api/product/list`, {
-      params: {date: date},
+      params: {
+        date: `${date.getFullYear()}-${date.getMonth() + 1}-${
+          date.getDate() + 1
+        }`,
+      },
     })
       .then(res => {
         setData(res.data);
@@ -31,8 +42,36 @@ function List({navigation, route}) {
   return (
     <ScrollView>
       <View style={styles.container}>
-        <Text>{JSON.stringify(data, null, 3)}</Text>
-        <Text>{date}</Text>
+        <Button title={strDate} onPress={() => setOpen(true)} />
+        <DatePicker
+          modal
+          open={open}
+          date={date}
+          mode="date"
+          locale={'kor'}
+          textColor={'#fff'}
+          onConfirm={date => {
+            setOpen(false);
+            setDate(date);
+          }}
+          onCancel={() => {
+            setOpen(false);
+          }}
+        />
+        {data !== 0
+          ? data.map((m, index) => {
+              return (
+                <Product
+                  list={true}
+                  key={index}
+                  id={m.id}
+                  name={m.name}
+                  exports={m.export}
+                  imports={m.import}
+                />
+              );
+            })
+          : ''}
       </View>
     </ScrollView>
   );
