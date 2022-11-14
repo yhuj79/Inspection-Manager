@@ -22,6 +22,23 @@ function Scanner({navigation, date}) {
   const [visible, setVisible] = useState(false);
   const [code, setCode] = useState(0);
   const [data, setData] = useState([]);
+  const [num, setNum] = useState(0);
+
+  const onBarCodeRead = (event: any) => {
+    if (!scaned) return;
+    setScaned(false);
+    setCode(event.nativeEvent.codeStringValue);
+    setVisible(true);
+  };
+
+  const handleOpen = () => {
+    setVisible(true);
+  };
+
+  const handleClose = () => {
+    setVisible(false);
+    setScaned(true);
+  };
 
   useEffect(() => {
     Axios.get(`http://${IP_KEY}:3000/api/product/scan`, {
@@ -34,24 +51,15 @@ function Scanner({navigation, date}) {
       .catch(error => console.log(error));
   }, [date, code]);
 
-  const onBarCodeRead = (event: any) => {
-    if (!scaned) return;
-    setScaned(false);
-    setCode(event.nativeEvent.codeStringValue);
-    // navigation.jumpTo('List', {
-    //   productId: event.nativeEvent.codeStringValue,
-    //   date: date,
-    // });
-    setVisible(true);
-  };
-
-  const handleOpen = () => {
-    setVisible(true);
-  };
-
-  const handleClose = () => {
-    setVisible(false);
-    setScaned(true);
+  const updateImport = () => {
+    Axios.get(`http://${IP_KEY}:3000/api/product/update`, {
+      params: {import: num, date: date, id: code},
+    })
+      .then(res => {
+        console.log(res.data); // Test
+        handleClose();
+      })
+      .catch(error => console.log(error));
   };
 
   return (
@@ -100,15 +108,16 @@ function Scanner({navigation, date}) {
           ) : (
             <Text>등록된 상품이 없습니다.</Text>
           )}
+          <Text>{num}</Text>
           <TextInput
             style={styles.input}
-            // onChangeText={onChangeText}
-            // value={value}
+            onChangeText={setNum}
+            value={num}
             placeholder={data[0] ? ` ${String(data[0].import)}` : null}
             placeholderTextColor="#000"
             keyboardType="number-pad"
           />
-          <Button title="등록" onPress={() => handleClose()} />
+          <Button title="등록" onPress={() => updateImport()} />
           <Button title="취소" onPress={() => handleClose()} />
         </View>
       </Backdrop>

@@ -55,3 +55,16 @@ app.get("/api/product/scan", (req, res) => {
     }
   });
 });
+
+app.get("/api/product/update", (req, res) => {
+  const sql =
+    "UPDATE InspectionManagerSystem.product SET import = ? WHERE date = ? AND id= ?";
+  const params = [req.query.import, req.query.date, req.query.id];
+  db.query(sql, params, (err, result) => {
+    if (!err) {
+      res.send(result);
+    } else {
+      res.send(err);
+    }
+  });
+});
