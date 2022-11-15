@@ -1,7 +1,8 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState, useRef, useEffect} from 'react';
-import {Backdrop} from 'react-native-backdrop';
 import {
+  Keyboard,
+  TouchableWithoutFeedback,
   Dimensions,
   StyleSheet,
   View,
@@ -19,7 +20,6 @@ import {IP_KEY} from '@env';
 function Scanner({navigation, date}) {
   const ref = useRef(null);
   const [scaned, setScaned] = useState(true);
-  const [visible, setVisible] = useState(false);
   const [code, setCode] = useState(0);
   const [data, setData] = useState([]);
   const [num, setNum] = useState(0);
@@ -28,16 +28,14 @@ function Scanner({navigation, date}) {
     if (!scaned) return;
     setScaned(false);
     setCode(event.nativeEvent.codeStringValue);
-    setVisible(true);
   };
 
-  const handleOpen = () => {
-    setVisible(true);
-  };
-
-  const handleClose = () => {
-    setVisible(false);
+  const cameraOpen = () => {
     setScaned(true);
+  };
+
+  const cameraClose = () => {
+    setScaned(false);
   };
 
   useEffect(() => {
@@ -47,6 +45,9 @@ function Scanner({navigation, date}) {
       .then(res => {
         setData(res.data);
         console.log(res.data); // Test
+        if (code) {
+          cameraClose();
+        }
       })
       .catch(error => console.log(error));
   }, [date, code]);
@@ -57,70 +58,60 @@ function Scanner({navigation, date}) {
     })
       .then(res => {
         console.log(res.data); // Test
-        handleClose();
+        cameraOpen();
       })
       .catch(error => console.log(error));
   };
 
   return (
     <View style={styles.container}>
-      <Camera
-        style={styles.scanner}
-        ref={ref}
-        cameraType={CameraType.Back} // Front/Back(default)
-        scanBarcode
-        showFrame={true}
-        laserColor="rgba(0, 0, 0, 0)"
-        surfaceColor="rgba(0, 0, 0, 0)"
-        onReadCode={onBarCodeRead}
-      />
-      <Backdrop
-        visible={visible}
-        handleOpen={handleOpen}
-        handleClose={handleClose}
-        onClose={() => {}}
-        swipeConfig={{
-          velocityThreshold: 0.3,
-          directionalOffsetThreshold: 80,
-        }}
-        animationConfig={{
-          speed: 5,
-          bounciness: 4,
-        }}
-        overlayColor="rgba(0,0,0,0.32)"
-        backdropStyle={{
-          backgroundColor: '#fff',
+      <TouchableWithoutFeedback
+        onPress={() => {
+          Keyboard.dismiss();
         }}>
-        <View style={styles.backdrop}>
-          {data[0] ? (
-            data.map((m, index) => {
-              return (
-                <Product
-                  list={false}
-                  key={index}
-                  id={m.id}
-                  name={m.name}
-                  exports={m.export}
-                  imports={m.import}
-                />
-              );
-            })
-          ) : (
-            <Text>등록된 상품이 없습니다.</Text>
-          )}
-          <Text>{num}</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={setNum}
-            value={num}
-            placeholder={data[0] ? ` ${String(data[0].import)}` : null}
-            placeholderTextColor="#000"
-            keyboardType="number-pad"
+        {scaned ? (
+          <Camera
+            style={styles.scanner}
+            ref={ref}
+            cameraType={CameraType.Back} // Front/Back(default)
+            scanBarcode
+            showFrame={true}
+            laserColor="rgba(0, 0, 0, 0)"
+            surfaceColor="rgba(0, 0, 0, 0)"
+            onReadCode={onBarCodeRead}
           />
-          <Button title="등록" onPress={() => updateImport()} />
-          <Button title="취소" onPress={() => handleClose()} />
-        </View>
-      </Backdrop>
+        ) : (
+          <View style={styles.backdrop}>
+            {data[0] ? (
+              data.map((m, index) => {
+                return (
+                  <Product
+                    list={false}
+                    key={index}
+                    id={m.id}
+                    name={m.name}
+                    exports={m.export}
+                    imports={m.import}
+                  />
+                );
+              })
+            ) : (
+              <Text>등록된 상품이 없습니다.</Text>
+            )}
+            <Text>{num}</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={setNum}
+              value={num}
+              placeholder={data[0] ? ` ${String(data[0].import)}` : null}
+              placeholderTextColor="#000"
+              keyboardType="number-pad"
+            />
+            <Button title="등록" onPress={() => updateImport()} />
+            <Button title="취소" onPress={() => cameraOpen()} />
+          </View>
+        )}
+      </TouchableWithoutFeedback>
     </View>
   );
 }
@@ -133,6 +124,7 @@ const styles = StyleSheet.create({
   },
   scanner: {flex: 1},
   backdrop: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     width: Dimensions.get('window').width,

@@ -10,9 +10,6 @@ function List({navigation}) {
   const [data, setData] = useState([]);
 
   const [date, setDate] = useState(new Date('2022-05-22T09:00:00'));
-  const strDate = `${date.getFullYear()}-${
-    date.getMonth() + 1
-  }-${date.getDate()}`;
 
   // TEST
   // useEffect(() => {
@@ -34,7 +31,7 @@ function List({navigation}) {
     })
       .then(res => {
         setData(res.data);
-        console.log(res.data); // TEST
+        // console.log(res.data); // TEST
       })
       .catch(error => console.log(error));
   }, [date]);
@@ -42,7 +39,12 @@ function List({navigation}) {
   return (
     <ScrollView>
       <View style={styles.container}>
-        <Button title={strDate} onPress={() => setOpen(true)} />
+        <Button
+          title={`${date.getFullYear()}-${
+            date.getMonth() + 1
+          }-${date.getDate()}`}
+          onPress={() => setOpen(true)}
+        />
         <DatePicker
           modal
           open={open}
