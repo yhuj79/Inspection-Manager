@@ -16,14 +16,10 @@ function Product({list, id, name, exports, imports}) {
           {name}
         </Text>
         <Text style={styles.exports}>출고 : {exports}</Text>
-        {list ? (
-          <Text
-            style={
-              exports == imports ? {color: '#0BC904'} : {color: '#ED0000'}
-            }>
-            입고 : {imports}
-          </Text>
-        ) : null}
+        <Text
+          style={exports == imports ? {color: '#0BC904'} : {color: '#ED0000'}}>
+          입고 : {imports}
+        </Text>
       </View>
     </View>
   );
@@ -50,7 +46,7 @@ const styles = StyleSheet.create({
   imageL: {
     width: 250,
     height: 250,
-    margin: 30,
+    margin: 15,
     borderColor: '#000',
     borderWidth: 1,
     borderRadius: 15,

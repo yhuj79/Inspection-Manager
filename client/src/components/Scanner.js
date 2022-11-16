@@ -1,19 +1,18 @@
-/* eslint-disable react-native/no-inline-styles */
 import React, {useState, useRef, useEffect} from 'react';
 import {
+  Platform,
   Keyboard,
   TouchableWithoutFeedback,
   Dimensions,
   StyleSheet,
+  KeyboardAvoidingView,
   View,
   Text,
   TextInput,
   Button,
-  Image,
 } from 'react-native';
 import {Camera, CameraType} from 'react-native-camera-kit';
 import Product from '../components/Product';
-import {ImagePath} from '../assets/ImagePath';
 import Axios from 'axios';
 import {IP_KEY} from '@env';
 
@@ -25,6 +24,7 @@ function Scanner({navigation, date}) {
   const [num, setNum] = useState(0);
 
   const onBarCodeRead = (event: any) => {
+    // eslint-disable-next-line curly
     if (!scaned) return;
     setScaned(false);
     setCode(event.nativeEvent.codeStringValue);
@@ -54,7 +54,7 @@ function Scanner({navigation, date}) {
 
   const updateImport = () => {
     Axios.get(`http://${IP_KEY}:3000/api/product/update`, {
-      params: {import: num, date: date, id: code},
+      params: {import: Number(num), date: date, id: code},
     })
       .then(res => {
         console.log(res.data); // Test
@@ -81,7 +81,9 @@ function Scanner({navigation, date}) {
             onReadCode={onBarCodeRead}
           />
         ) : (
-          <View style={styles.backdrop}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={styles.backdrop}>
             {data[0] ? (
               data.map((m, index) => {
                 return (
@@ -98,18 +100,19 @@ function Scanner({navigation, date}) {
             ) : (
               <Text>등록된 상품이 없습니다.</Text>
             )}
-            <Text>{num}</Text>
-            <TextInput
-              style={styles.input}
-              onChangeText={setNum}
-              value={num}
-              placeholder={data[0] ? ` ${String(data[0].import)}` : null}
-              placeholderTextColor="#000"
-              keyboardType="number-pad"
-            />
-            <Button title="등록" onPress={() => updateImport()} />
-            <Button title="취소" onPress={() => cameraOpen()} />
-          </View>
+            <View style={styles.inputline}>
+              <TextInput
+                style={styles.input}
+                onChangeText={setNum}
+                value={String(num)}
+                placeholder="&nbsp;입고 입력"
+                placeholderTextColor="rgba(0, 0, 0, 0.7)"
+                keyboardType="number-pad"
+              />
+              <Button title="등록" onPress={() => updateImport()} />
+              <Button title="취소" onPress={() => cameraOpen()} />
+            </View>
+          </KeyboardAvoidingView>
         )}
       </TouchableWithoutFeedback>
     </View>
@@ -119,16 +122,19 @@ function Scanner({navigation, date}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
   },
-  scanner: {flex: 1},
+  scanner: {
+    flex: 1,
+  },
   backdrop: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height - 144,
+  },
+  inputline: {
+    flexDirection: 'row',
+    marginTop: 10,
+    marginBottom: 110,
   },
   input: {
     width: 100,
