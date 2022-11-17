@@ -1,3 +1,5 @@
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable eqeqeq */
 import React from 'react';
 import {Dimensions, StyleSheet, View, Text, Image} from 'react-native';
 import {ImagePath} from '../assets/ImagePath';

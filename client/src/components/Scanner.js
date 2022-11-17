@@ -3,7 +3,6 @@ import {
   Platform,
   Keyboard,
   TouchableWithoutFeedback,
-  Dimensions,
   StyleSheet,
   KeyboardAvoidingView,
   View,
@@ -21,7 +20,7 @@ function Scanner({navigation, date}) {
   const [scaned, setScaned] = useState(true);
   const [code, setCode] = useState(0);
   const [data, setData] = useState([]);
-  const [num, setNum] = useState(0);
+  const [num, setNum] = useState('');
 
   const onBarCodeRead = (event: any) => {
     // eslint-disable-next-line curly
@@ -87,31 +86,36 @@ function Scanner({navigation, date}) {
             {data[0] ? (
               data.map((m, index) => {
                 return (
-                  <Product
-                    list={false}
-                    key={index}
-                    id={m.id}
-                    name={m.name}
-                    exports={m.export}
-                    imports={m.import}
-                  />
+                  <View key={index}>
+                    <Product
+                      list={false}
+                      key={index}
+                      id={m.id}
+                      name={m.name}
+                      exports={m.export}
+                      imports={m.import}
+                    />
+                    <View style={styles.inputline}>
+                      <TextInput
+                        style={styles.input}
+                        onChangeText={setNum}
+                        value={num}
+                        placeholder="입고 입력"
+                        placeholderTextColor="rgba(0, 0, 0, 0.7)"
+                        keyboardType="number-pad"
+                      />
+                      <Button title="등록" onPress={() => updateImport()} />
+                      <Button title="취소" onPress={() => cameraOpen()} />
+                    </View>
+                  </View>
                 );
               })
             ) : (
-              <Text>등록된 상품이 없습니다.</Text>
+              <View>
+                <Text>해당 일자에 등록된 상품이 없습니다.</Text>
+                <Button title="검사 시작" onPress={() => cameraOpen()} />
+              </View>
             )}
-            <View style={styles.inputline}>
-              <TextInput
-                style={styles.input}
-                onChangeText={setNum}
-                value={String(num)}
-                placeholder="&nbsp;입고 입력"
-                placeholderTextColor="rgba(0, 0, 0, 0.7)"
-                keyboardType="number-pad"
-              />
-              <Button title="등록" onPress={() => updateImport()} />
-              <Button title="취소" onPress={() => cameraOpen()} />
-            </View>
           </KeyboardAvoidingView>
         )}
       </TouchableWithoutFeedback>
@@ -133,6 +137,7 @@ const styles = StyleSheet.create({
   },
   inputline: {
     flexDirection: 'row',
+    justifyContent: 'center',
     marginTop: 10,
     marginBottom: 110,
   },
@@ -142,6 +147,7 @@ const styles = StyleSheet.create({
     borderColor: '#000',
     borderRadius: 10,
     borderWidth: 1,
+    padding: 7,
   },
 });
 

@@ -1,5 +1,7 @@
+/* eslint-disable no-shadow */
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, Text, ScrollView, Button} from 'react-native';
+import {StyleSheet, View, ScrollView, Button, Text} from 'react-native';
+import {useIsFocused} from '@react-navigation/native';
 import DatePicker from 'react-native-date-picker';
 import Product from '../components/Product';
 import Axios from 'axios';
@@ -8,8 +10,10 @@ import {IP_KEY} from '@env';
 function List({navigation}) {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
-
   const [date, setDate] = useState(new Date('2022-05-22T09:00:00'));
+  // const [check, setCheck] = useState(0);
+
+  const isFocused = useIsFocused();
 
   // TEST
   // useEffect(() => {
@@ -21,7 +25,7 @@ function List({navigation}) {
   //     .catch(error => console.log(error));
   // }, []);
 
-  useEffect(() => {
+  function GetList() {
     Axios.get(`http://${IP_KEY}:3000/api/product/list`, {
       params: {
         date: `${date.getFullYear()}-${date.getMonth() + 1}-${
@@ -31,10 +35,24 @@ function List({navigation}) {
     })
       .then(res => {
         setData(res.data);
-        // console.log(res.data); // TEST
+        console.log(res.data); // TEST
       })
       .catch(error => console.log(error));
-  }, [date]);
+  }
+
+  // function GetTotal() {
+  //   for (let i = 0; i < data.length; i++) {
+  //     if (data[i].export === data[i].import) {
+  //       setCheck(check + 1);
+  //     }
+  //   }
+  // }
+
+  useEffect(() => {
+    GetList();
+    // GetTotal();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [date, isFocused]);
 
   return (
     <ScrollView>
@@ -60,20 +78,23 @@ function List({navigation}) {
             setOpen(false);
           }}
         />
-        {data !== 0
-          ? data.map((m, index) => {
-              return (
-                <Product
-                  list={true}
-                  key={index}
-                  id={m.id}
-                  name={m.name}
-                  exports={m.export}
-                  imports={m.import}
-                />
-              );
-            })
-          : ''}
+        {/* <Text>{check}</Text> */}
+        {JSON.stringify(data) !== '[]' ? (
+          data.map((m, index) => {
+            return (
+              <Product
+                list={true}
+                key={index}
+                id={m.id}
+                name={m.name}
+                exports={m.export}
+                imports={m.import}
+              />
+            );
+          })
+        ) : (
+          <Text style={styles.text}>해당 일자에 등록된 상품이 없습니다.</Text>
+        )}
       </View>
     </ScrollView>
   );
@@ -87,6 +108,9 @@ const styles = StyleSheet.create({
   },
   productId: {
     fontSize: 20,
+  },
+  text: {
+    marginTop: 150,
   },
 });
 

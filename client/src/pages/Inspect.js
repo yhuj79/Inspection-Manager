@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
-import {SafeAreaView, View, Button, Text} from 'react-native';
+import {SafeAreaView, View, Button} from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import Scanner from '../components/Scanner';
 

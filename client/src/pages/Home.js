@@ -12,8 +12,8 @@ function Home({navigation}) {
         style={{width: 350, height: 200, margin: 30}}
       />
       <Button
-        title="Product Id Clear"
-        onPress={() => navigation.jumpTo('List', {productId: ''})}
+        title="Start Inspect"
+        onPress={() => navigation.jumpTo('Inspect')}
       />
     </View>
   );
