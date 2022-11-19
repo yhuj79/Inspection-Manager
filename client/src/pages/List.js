@@ -10,7 +10,7 @@ import {IP_KEY} from '@env';
 function List({navigation}) {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
-  const [date, setDate] = useState(new Date('2022-05-22T09:00:00'));
+  const [date, setDate] = useState(new Date('2022-11-19T09:00:00'));
   // const [check, setCheck] = useState(0);
 
   const isFocused = useIsFocused();

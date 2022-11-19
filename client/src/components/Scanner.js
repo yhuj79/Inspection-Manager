@@ -58,6 +58,7 @@ function Scanner({navigation, date}) {
       .then(res => {
         console.log(res.data); // Test
         cameraOpen();
+        setNum('');
       })
       .catch(error => console.log(error));
   };

@@ -6,7 +6,7 @@ import Scanner from '../components/Scanner';
 
 function Inspect({navigation}) {
   const [enabled, setEnabled] = useState(false);
-  const [date, setDate] = useState(new Date('2022-05-22T09:00:00'));
+  const [date, setDate] = useState(new Date('2022-11-19T09:00:00'));
 
   return (
     <View style={{flex: 1}}>

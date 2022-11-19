@@ -6,7 +6,7 @@ function Home({navigation}) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Inspection Manager</Text>
-      <Text style={{fontSize: 20, margin: 5}}>1.0.0</Text>
+      <Text style={{fontSize: 20, margin: 5}}>1.0.1</Text>
       <Image
         source={require('../assets/reactnative.png')}
         style={{width: 350, height: 200, margin: 30}}
