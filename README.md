@@ -9,9 +9,9 @@
 ## About The Project
 
 <div>
-    <img align=top src="https://raw.githubusercontent.com/yhuj79/Inspection-Manager/main/assets/1.png" width=200>
-    <img align=top src="https://raw.githubusercontent.com/yhuj79/Inspection-Manager/main/assets/2.png" width=200>
-    <img align=top src="https://raw.githubusercontent.com/yhuj79/Inspection-Manager/main/assets/3.png" width=200>
+    <img align=top src="https://raw.githubusercontent.com/yhuj79/Inspection-Manager/main/assets/t1.png" width=200>
+    <img align=top src="https://raw.githubusercontent.com/yhuj79/Inspection-Manager/main/assets/t2.png" width=200>
+    <img align=top src="https://raw.githubusercontent.com/yhuj79/Inspection-Manager/main/assets/t3.png" width=200>
 </div>
 
 ### :alarm_clock: 제작 기간
